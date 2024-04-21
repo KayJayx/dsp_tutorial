@@ -11,6 +11,11 @@ def StartButtonEventHandler(sender: typing.Any, app: typing.Any, user: typing.An
     generate_waveform: threading.Event = user
     generate_waveform.set()
 
+def StopButtonEventHandler(sender: typing.Any, app: typing.Any, user: typing.Any) -> None:
+
+    generate_waveform: threading.Event = user
+    generate_waveform.clear()
+
 def main():
 
     # State variables
@@ -94,7 +99,16 @@ def main():
         width=140, height=30,
         parent=group2,
         callback=StartButtonEventHandler,
-        user_data=generate_waveform
+        user_data=generate_waveform,
+        pos=[20, 50]
+    )
+    stop_waveform_button = cc.Button(
+        label="Stop Waveform Generation",
+        width=180, height=30,
+        parent=group2,
+        callback=StopButtonEventHandler,
+        user_data=generate_waveform,
+        pos=[generate_waveform_button.GetPosition()[0] + generate_waveform_button.GetWidth() + 20, generate_waveform_button.GetPosition()[1]]
     )
     #-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
