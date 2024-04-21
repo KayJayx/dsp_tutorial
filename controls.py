@@ -1996,3 +1996,37 @@ class LoadingIndicator(Control):
 
         # Add self as a child to the parent
         self.parent.children.append(self)
+
+class Slider(Control):
+
+    """
+    Adds a floating point slider control
+    """
+
+    def __init__(self, label: str = None, width: int = 0, height: int = 0, indent: int = -1,
+                 parent: Control = None, callback: typing.Any = None, show: bool = True, enabled: bool = True,
+                 pos: 'list[int]' = [], default_value: float = 0, vertical: bool = False, no_input: bool = False,
+                 clamped: bool = False, min_value: float = 0, max_value: float = 100, format: str = '%.3f') -> None:
+        super().__init__(tag=None, label=label)
+        self.parent = parent
+        self.tag    = dpg.add_slider_float(
+            label=self.label,
+            width=width,
+            height=height,
+            indent=indent,
+            parent=self.parent.tag,
+            callback=callback,
+            show=show,
+            enabled=enabled,
+            pos=pos,
+            default_value=default_value,
+            vertical=vertical,
+            no_input=no_input,
+            clamped=clamped,
+            min_value=min_value,
+            max_value=max_value,
+            format=format
+        )
+
+        # Add self as a child to the parent
+        self.parent.children.append(self)
