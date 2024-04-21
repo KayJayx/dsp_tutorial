@@ -2,19 +2,28 @@ import controls as cc
 import tkinter as tk
 import numpy as np
 import typing
+import os
+import threading
 
 def StartButtonEventHandler(sender: typing.Any, app: typing.Any, user: typing.Any) -> None:
 
-    # 
-    pass
+    # Set the generate waveform flag
+    generate_waveform: threading.Event = user
+    generate_waveform.set()
 
 def main():
+
+    # State variables
+    generate_waveform = threading.Event()
+    length_of_plot    = 100
+    iteration_count   = 0
+    x_data            = []
 
     # We need the tkinter library in order to get the window
     # screen width and height
     root          = tk.Tk()
     screen_width  = root.winfo_screenwidth()
-    screen_height = root.winfo_screenheight() - 155
+    screen_height = root.winfo_screenheight() - 155 if os.name == "posix" else root.winfo_screenheight()
 
     # In order to make successful calls to the Dear PyGUI framework we must 
     # establish a context where we can make calls to that code
@@ -32,7 +41,7 @@ def main():
 
     # Create a window just for the plots
     plot_window_width  = screen_width - 800
-    plot_window_height = screen_height - 40
+    plot_window_height = screen_height if os.name == "posix" else screen_height - 40
     plot_window = cc.ChildWindow(width=plot_window_width, height=plot_window_height, parent=main_window, pos=[0, 0], no_scrollbar=True)
 
     # Create a time-domain plot and add it to the window
@@ -48,7 +57,7 @@ def main():
     time_plot.AddPlot(x_label=x_label, y_label=y_label)
     time_plot.SetPlotLineColor(color=[36, 183, 199], theme_component=time_plot.line_theme_component)
     time_plot.BindTheme()
-    time_plot.SetAxisLimits(time_plot.x_axis, 0, 100)
+    time_plot.SetAxisLimits(time_plot.x_axis, 0, length_of_plot)
     time_line_series = cc.dpg.add_line_series(x=[0], y=[0], parent=time_plot.x_axis)
 
     # Create a frequency-domain plot and add it to the window
@@ -67,23 +76,25 @@ def main():
     freq_line_series = cc.dpg.add_line_series(x=[0], y=[0], parent=freq_plot.x_axis)
 
     # Create a window for the controls
-    control_window_width  = screen_width - plot_window_width - 16
+    control_window_width  = screen_width - plot_window_width if os.name == "posix" else screen_width - plot_window_width - 16
     control_window_height = plot_window_height
     control_window = cc.ChildWindow(width=control_window_width, height=control_window_height, parent=main_window, pos=[plot_window_width, 0], no_scrollbar=True)
-    control_group  = cc.Group(width=control_window_width, height=control_window_height, parent=control_window, pos=[0, 0])
-    control_group.ChangeGroupPadding(window_pad=[0, 0], frame_pad=[10, 10], item_spacing=[0, 0])
-    control_group.BindTheme()
 
     # Create a label to show the controls
-    controls_label = cc.Label(label="   Controls", parent=control_group)
-    separator      = cc.LineSeparator(parent=control_group)
+    group1         = cc.Group(parent=control_window, pos=[0, 0])
+    group1.ChangeGroupPadding(window_pad=[0, 0], frame_pad=[10, 10], item_spacing=[0, 0])
+    group1.BindTheme()
+    controls_label = cc.Label(label="   Controls", parent=group1)
+    separator      = cc.LineSeparator(parent=group1)
 
     # Create a button to generate a waveform
+    group2 = cc.Group(parent=control_window, pos=[0, 35])
     generate_waveform_button = cc.Button(
         label="Generate Waveform",
         width=140, height=30,
-        parent=control_group,
-        pos=[30, 30]
+        parent=group2,
+        callback=StartButtonEventHandler,
+        user_data=generate_waveform
     )
     #-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
@@ -99,7 +110,7 @@ def main():
         width=screen_width,
         height=screen_height,
         max_width=screen_width,
-        max_height=screen_height + 155,
+        max_height=screen_height + 155 if os.name == "posix" else screen_height,
         min_width=screen_width,
         min_height=screen_height
     )
@@ -108,24 +119,29 @@ def main():
     # Show the main window created by the operating system
     cc.dpg.show_viewport()
 
-    curr_count = 0
-    prev_count = 0
-
     # Main loop
     while cc.dpg.is_dearpygui_running():
 
-        """
-        curr_count = len(incoming_data)
-        if curr_count != prev_count:
+        # If the generate waveform is set start populating the plots
+        if generate_waveform.is_set():
 
-            x = incoming_data
-            y = [np.sin(t) for t in x]
+            # Generate data
+            if len(x_data) != length_of_plot:
+                x_data.append(iteration_count)
+            else:
+                x_data[iteration_count] = iteration_count
 
-            cc.dpg.configure_item(line_series, x=x, y=y)
+            y_data = [np.sin(x) for x in x_data]
+            iteration_count += 1
+
+            if iteration_count == length_of_plot:
+                iteration_count = 0
+
+            # Add the algorithm stuff here
+
+            # Plot the data
+            cc.dpg.configure_item(time_line_series, x=x_data, y=y_data)
             cc.dpg.fit_axis_data(time_plot.y_axis)
-
-            prev_count = curr_count
-        """
 
         # Render the GUI frame
         cc.dpg.render_dearpygui_frame()
