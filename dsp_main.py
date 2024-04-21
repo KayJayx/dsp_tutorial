@@ -97,7 +97,7 @@ def main():
     controls_label = cc.Label(label="   Controls", parent=group1)
     separator      = cc.LineSeparator(parent=group1)
 
-    # Create a button to generate a waveform
+    # Create buttons for generating, stoping and clearing the waveform
     group2 = cc.Group(parent=control_window, pos=[0, 35])
     generate_waveform_button = cc.Button(
         label="Generate Waveform",
@@ -174,7 +174,7 @@ def main():
 
             # Add the algorithm stuff here
             #*****************************************************************
-            
+
             #*****************************************************************
 
             # Plot the data
