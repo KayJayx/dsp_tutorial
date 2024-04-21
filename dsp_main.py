@@ -2,22 +2,11 @@ import controls as cc
 import tkinter as tk
 import numpy as np
 import typing
-import math
 
-def KeyPressEventHandler(sender: typing.Any, app: typing.Any, user: typing.Any) -> None:
+def StartButtonEventHandler(sender: typing.Any, app: typing.Any, user: typing.Any) -> None:
 
-    # Extract stuff from user data
-    plot: cc.Plot = user[0]
-    line_series   = user[1]
-
-    # Add a sine wave
-    x = [t for t in range(0, 101)]
-    y = [10 * np.sin(2 * np.pi * 1 * t) for t in x]
-
-    print(x)
-    print(y)
-
-    cc.dpg.configure_item(line_series, x=x, y=y)
+    # 
+    pass
 
 def main():
 
@@ -41,19 +30,61 @@ def main():
     main_window.ChangeWindowPadding(window_pad=[0, 0], frame_pad=[0, 0], item_spacing=[0, 0])
     main_window.BindTheme()
 
-    # Create a plot and add it to the window
-    time_plot = cc.Plot(label="Amplitude vs. Time", height=500, width=-1, parent=main_window)
-    time_plot.AddPlot(x_label="Time", y_label="Amplitude")
+    # Create a window just for the plots
+    plot_window_width  = screen_width - 800
+    plot_window_height = screen_height - 40
+    plot_window = cc.ChildWindow(width=plot_window_width, height=plot_window_height, parent=main_window, pos=[0, 0], no_scrollbar=True)
+
+    # Create a time-domain plot and add it to the window
+    x_label = "Time"
+    y_label = "Amplitude"
+    time_plot = cc.Plot(
+        label=f"{y_label} vs. {x_label}",
+        width=plot_window_width,
+        height=int(plot_window_height / 2),
+        parent=plot_window,
+        pos=[0, 0]
+    )
+    time_plot.AddPlot(x_label=x_label, y_label=y_label)
     time_plot.SetPlotLineColor(color=[36, 183, 199], theme_component=time_plot.line_theme_component)
     time_plot.BindTheme()
     time_plot.SetAxisLimits(time_plot.x_axis, 0, 100)
+    time_line_series = cc.dpg.add_line_series(x=[0], y=[0], parent=time_plot.x_axis)
 
-    # Add the line series plot here
-    line_series = cc.dpg.add_line_series(x=[0], y=[0], parent=time_plot.x_axis)
+    # Create a frequency-domain plot and add it to the window
+    x_label = "Frequency"
+    y_label = "Intensity"
+    freq_plot = cc.Plot(
+        label=f"{y_label} vs. {x_label}",
+        width=plot_window_width,
+        height=int(plot_window_height / 2),
+        parent=plot_window,
+        pos=[0, time_plot.GetPosition()[1] + time_plot.GetHeight()]
+    )
+    freq_plot.AddPlot(x_label=x_label, y_label=y_label)
+    freq_plot.SetPlotLineColor(color=[36, 183, 199], theme_component=freq_plot.line_theme_component)
+    freq_plot.BindTheme()
+    freq_line_series = cc.dpg.add_line_series(x=[0], y=[0], parent=freq_plot.x_axis)
 
-    # Setup the key board for key presses
-    keyboard = cc.Keyboard()
-    keyboard.RegisterKeyPressEventHandler(user_data=[time_plot, line_series], callback=KeyPressEventHandler)
+    # Create a window for the controls
+    control_window_width  = screen_width - plot_window_width - 16
+    control_window_height = plot_window_height
+    control_window = cc.ChildWindow(width=control_window_width, height=control_window_height, parent=main_window, pos=[plot_window_width, 0], no_scrollbar=True)
+    control_group  = cc.Group(width=control_window_width, height=control_window_height, parent=control_window, pos=[0, 0])
+    control_group.ChangeGroupPadding(window_pad=[0, 0], frame_pad=[10, 10], item_spacing=[0, 0])
+    control_group.BindTheme()
+
+    # Create a label to show the controls
+    controls_label = cc.Label(label="   Controls", parent=control_group)
+    separator      = cc.LineSeparator(parent=control_group)
+
+    # Create a button to generate a waveform
+    generate_waveform_button = cc.Button(
+        label="Generate Waveform",
+        width=140, height=30,
+        parent=control_group,
+        pos=[30, 30]
+    )
     #-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
     # Set a primary window which will always be drawn in the background
@@ -77,8 +108,24 @@ def main():
     # Show the main window created by the operating system
     cc.dpg.show_viewport()
 
+    curr_count = 0
+    prev_count = 0
+
     # Main loop
     while cc.dpg.is_dearpygui_running():
+
+        """
+        curr_count = len(incoming_data)
+        if curr_count != prev_count:
+
+            x = incoming_data
+            y = [np.sin(t) for t in x]
+
+            cc.dpg.configure_item(line_series, x=x, y=y)
+            cc.dpg.fit_axis_data(time_plot.y_axis)
+
+            prev_count = curr_count
+        """
 
         # Render the GUI frame
         cc.dpg.render_dearpygui_frame()
