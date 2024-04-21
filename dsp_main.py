@@ -166,16 +166,15 @@ def main():
             else:
                 x_data[iteration_count] = iteration_count
 
+            # Add the algorithm stuff here
+            #*****************************************************************
             y_data = [np.sin(x) for x in x_data]
+
+            #*****************************************************************
             iteration_count += 1
 
             if iteration_count == length_of_plot:
                 iteration_count = 0
-
-            # Add the algorithm stuff here
-            #*****************************************************************
-
-            #*****************************************************************
 
             # Plot the data
             cc.dpg.configure_item(time_line_series, x=x_data, y=y_data)
