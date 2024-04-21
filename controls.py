@@ -68,14 +68,14 @@ class Mouse():
         pass
 
     @staticmethod
-    def GetMousePosition(local_to_window: bool = False) -> list[int]:
+    def GetMousePosition(local_to_window: bool = False) -> 'list[int]':
         """
         Gets the current mouse position on the screen
         """
         return dpg.get_mouse_pos(local=local_to_window)
     
     @staticmethod
-    def GetMouseDragDelta() -> list[float]:
+    def GetMouseDragDelta() -> 'list[float]':
         """
         Get the mouse drag delta
         """
@@ -158,13 +158,13 @@ class Control():
         """
         return dpg.is_item_shown(self.tag)
 
-    def GetPosition(self) -> list[int]:
+    def GetPosition(self) -> 'list[int]':
         """
         Get the position of the control on the screen
         """
         return dpg.get_item_pos(self.tag)
     
-    def SetPosition(self, pos: list[int]) -> None:
+    def SetPosition(self, pos: 'list[int]') -> None:
         """
         Set the position of the control on the screen
         """
@@ -231,7 +231,7 @@ class Menu(Control):
 
         return self
 
-    def ChangeMenuPadding(self, window_pad: list[int], frame_pad: list[int], item_spacing: list[int]) -> None:
+    def ChangeMenuPadding(self, window_pad: 'list[int]', frame_pad: 'list[int]', item_spacing: 'list[int]') -> None:
         """
         Change padding for the menu items
         """
@@ -262,7 +262,7 @@ class Menu(Control):
 
     def IsShown(self) -> bool: pass
 
-    def GetPosition(self) -> list[int]: pass
+    def GetPosition(self) -> 'list[int]': pass
     
     def GetWidth(self) -> int: pass
     
@@ -311,7 +311,7 @@ class MenuBar(Control):
 
     def IsShown(self) -> bool: pass
 
-    def GetPosition(self) -> list[int]: pass
+    def GetPosition(self) -> 'list[int]': pass
     
     def GetWidth(self) -> int: pass
     
@@ -348,7 +348,7 @@ class Tab(Control):
 
     def IsShown(self) -> bool: pass
 
-    def GetPosition(self) -> list[int]: pass
+    def GetPosition(self) -> 'list[int]': pass
     
     def GetWidth(self) -> int: pass
     
@@ -397,7 +397,7 @@ class TabBar(Control):
 
     def IsShown(self) -> bool: pass
 
-    def GetPosition(self) -> list[int]: pass
+    def GetPosition(self) -> 'list[int]': pass
     
     def GetWidth(self) -> int: pass
     
@@ -439,7 +439,7 @@ class DragAndDropPayloadExtension(Control):
 
     def IsShown(self) -> bool: pass
 
-    def GetPosition(self) -> list[int]: pass
+    def GetPosition(self) -> 'list[int]': pass
     
     def GetWidth(self) -> int: pass
     
@@ -451,7 +451,7 @@ class CollapseHeader(Control):
     Collapse Header Control, creates a collapse header control
     """
 
-    def __init__(self, label: str = None, indent: int = -1, pos: list[int] = [], parent: Control = None,
+    def __init__(self, label: str = None, indent: int = -1, pos: 'list[int]' = [], parent: Control = None,
                  closable: bool = False, default_open: bool = False, open_on_double_click: bool = False,
                  open_on_arrow: bool = False, leaf: bool = False, bullet: bool = False) -> None:
         super().__init__(tag=None, label=label)
@@ -474,7 +474,7 @@ class CollapseHeader(Control):
         # Add self as a child to the parent
         self.parent.children.append(self)
 
-    def ChangeCollapseHeaderPadding(self, window_pad: list[int], frame_pad: list[int], item_spacing: list[int]) -> None:
+    def ChangeCollapseHeaderPadding(self, window_pad: 'list[int]', frame_pad: 'list[int]', item_spacing: 'list[int]') -> None:
         """
         Change padding for the control
         """
@@ -507,8 +507,8 @@ class Window(Control):
     """
 
     def __init__(self, label: str = None, width: int = 0, height: int = 0, 
-                 pos: list[int] = [], add_menubar: bool = False, min_size: list[int] = [100, 100], 
-                 max_size: list[int] = [30000, 30000], collapsed: bool = False, autosize: bool = False,
+                 pos: 'list[int]' = [], add_menubar: bool = False, min_size: 'list[int]' = [100, 100], 
+                 max_size: 'list[int]' = [30000, 30000], collapsed: bool = False, autosize: bool = False,
                  no_resize: bool = False, no_title_bar: bool = False, no_move: bool = False,
                  no_scrollbar: bool = False, no_collapse: bool = False, horizontal_scrollbar: bool = False,
                  no_focus_on_appearing: bool = False, no_bring_to_front_on_focus: bool = False, 
@@ -559,7 +559,7 @@ class Window(Control):
 
         return self
 
-    def ChangeWindowColor(self, color: list[int]) -> None:
+    def ChangeWindowColor(self, color: 'list[int]') -> None:
         """
         Changes the color of the window
         """
@@ -567,7 +567,7 @@ class Window(Control):
 
         return self
     
-    def ChangeWindowPadding(self, window_pad: list[int], frame_pad: list[int], item_spacing: list[int]) -> None:
+    def ChangeWindowPadding(self, window_pad: 'list[int]', frame_pad: 'list[int]', item_spacing: 'list[int]') -> None:
         """
         Change padding for the controls in the window
         """
@@ -592,7 +592,7 @@ class ChildWindow(Control):
     """
 
     def __init__(self, label: str = None, width: int = 0, height: int = 0, 
-                 pos: list[int] = [], add_menubar: bool = False, parent: Control = None, 
+                 pos: 'list[int]' = [], add_menubar: bool = False, parent: Control = None, 
                  drop_callback: typing.Any = None, user_data: typing.Any = None,
                  payload_type: str = '$$DPG_PAYLOAD', border: bool = True, autosize_x: bool = False,
                  autosize_y: bool = False, no_scrollbar: bool = False, horizontal_scrollbar: bool = False) -> None:
@@ -627,7 +627,7 @@ class ChildWindow(Control):
         # Add self as a child to the parent
         self.parent.children.append(self)
     
-    def ChangeChildWindowPadding(self, window_pad: list[int], frame_pad: list[int], item_spacing: list[int]) -> None:
+    def ChangeChildWindowPadding(self, window_pad: 'list[int]', frame_pad: 'list[int]', item_spacing: 'list[int]') -> None:
         """
         Change padding for the controls in the child window
         """
@@ -637,7 +637,7 @@ class ChildWindow(Control):
 
         return self
     
-    def ChangeWindowBackgroundColor(self, color: list[int]) -> None:
+    def ChangeWindowBackgroundColor(self, color: 'list[int]') -> None:
         """
         Change the background color of the window
         """
@@ -645,7 +645,7 @@ class ChildWindow(Control):
 
         return self
     
-    def ChangeWindowBorderColor(self, color: list[int]) -> None:
+    def ChangeWindowBorderColor(self, color: 'list[int]') -> None:
         """
         Changes the color of the windows border
         """
@@ -684,7 +684,7 @@ class Button(Control):
     """
 
     def __init__(self, label: str = None, width: int = 0, height: int = 0, 
-                 pos: list[int] = [], parent: Control = None, callback: typing.Any = None,
+                 pos: 'list[int]' = [], parent: Control = None, callback: typing.Any = None,
                  drag_callback: typing.Any = None, drop_callback: typing.Any = None,
                  user_data: typing.Any = None, payload_type: str = '$$DPG_PAYLOAD', small: bool = False,
                  arrow: bool = False, direction: int = 0) -> None:
@@ -720,7 +720,7 @@ class Button(Control):
 
         return self
     
-    def ChangeButtonColor(self, color: list[int]) -> None:
+    def ChangeButtonColor(self, color: 'list[int]') -> None:
         """
         Change the color of the background of the button
         """
@@ -765,7 +765,7 @@ class Group(Control):
     """
 
     def __init__(self, label: str = None, width: int = 0, height: int = 0,
-                 pos: list[int] = [], horizontal: bool = False, parent: Control = None, 
+                 pos: 'list[int]' = [], horizontal: bool = False, parent: Control = None, 
                  drag_callback: typing.Any = None, drop_callback: typing.Any = None, 
                  user_data: typing.Any = None, payload_type: str = '$$DPG_PAYLOAD') -> None:
         super().__init__(tag=None, label=label)
@@ -788,7 +788,7 @@ class Group(Control):
         # Add self as a child to the parent
         self.parent.children.append(self)
 
-    def ChangeGroupPadding(self, window_pad: list[int], frame_pad: list[int], item_spacing: list[int]) -> None:
+    def ChangeGroupPadding(self, window_pad: 'list[int]', frame_pad: 'list[int]', item_spacing: 'list[int]') -> None:
         """
         Change padding for the controls in the group container
         """
@@ -812,8 +812,8 @@ class Label(Control):
     Label Control, creates a label
     """
 
-    def __init__(self, label: str = None, pos: list[int] = [], wrap: int = -1, 
-                 bullet: bool = False, color: list[int] = (-255, 0, 0, 255), indent: int = -1,
+    def __init__(self, label: str = None, pos: 'list[int]' = [], wrap: int = -1, 
+                 bullet: bool = False, color: 'list[int]' = (-255, 0, 0, 255), indent: int = -1,
                  parent: Control = None, drag_callback: typing.Any = None,
                  drop_callback: typing.Any = None) -> None:
         super().__init__(tag=None, label=label)
@@ -836,7 +836,7 @@ class Label(Control):
         # Add self as a child to the parent
         self.parent.children.append(self)
 
-    def ChangeLabelPadding(self, window_pad: list[int], frame_pad: list[int], item_spacing: list[int]) -> None:
+    def ChangeLabelPadding(self, window_pad: 'list[int]', frame_pad: 'list[int]', item_spacing: 'list[int]') -> None:
         """
         Change padding for the control
         """
@@ -862,7 +862,7 @@ class Label(Control):
 
         return self
     
-    def ChangeLabelColor(self, color: list[float]) -> None:
+    def ChangeLabelColor(self, color: 'list[float]') -> None:
         """
         Change the color of the label text
         """
@@ -876,7 +876,7 @@ class LineSeparator(Control):
     Line Separator Control, creates a line separator within a window
     """
 
-    def __init__(self, label: str = None, pos: list[int] = [], parent: Control = None) -> None:
+    def __init__(self, label: str = None, pos: 'list[int]' = [], parent: Control = None) -> None:
         super().__init__(tag=None, label=label)
         self.parent = parent
         self.tag    = dpg.add_separator(pos=pos, parent=self.parent.tag)
@@ -890,7 +890,7 @@ class Plot(Control):
     Plot Control, creates a plot control
     """
 
-    def __init__(self, label: str = None, width: int = 0, height: int = 0, pos: list[int] = [],
+    def __init__(self, label: str = None, width: int = 0, height: int = 0, pos: 'list[int]' = [],
                  one_plot_at_a_time: bool = False, override_plot_on_entry: bool = False,
                  parent: Control = None, callback: typing.Any = None, 
                  drag_callback: typing.Any = None, drop_callback: typing.Any = None, 
@@ -1160,7 +1160,7 @@ class Plot(Control):
 
         return self
     
-    def SetPlotLineColor(self, color: list[int], theme_component: int) -> None:
+    def SetPlotLineColor(self, color: 'list[int]', theme_component: int) -> None:
         """
         Set the color of the line on plot
         """
@@ -1168,7 +1168,7 @@ class Plot(Control):
 
         return self
     
-    def ChangePlotPadding(self, window_pad: list[int], frame_pad: list[int], item_spacing: list[int], theme_component: int) -> None:
+    def ChangePlotPadding(self, window_pad: 'list[int]', frame_pad: 'list[int]', item_spacing: 'list[int]', theme_component: int) -> None:
         """
         Change padding for the control
         """
@@ -1200,8 +1200,8 @@ class ListBox(Control):
     ListBox Control, creates a listbox control
     """
 
-    def __init__(self, items: list[str] = [], num_items: int = 3, default_value: str = '', 
-                 label: str = None, width: int = 0, pos: list[int] = [], parent: Control = None, 
+    def __init__(self, items: 'list[str]' = [], num_items: int = 3, default_value: str = '', 
+                 label: str = None, width: int = 0, pos: 'list[int]' = [], parent: Control = None, 
                  callback: typing.Any = None, drag_callback: typing.Any = None, 
                  user_data: typing.Any = None, payload_type: str = '$$DPG_PAYLOAD') -> None:
         super().__init__(tag=None, label=label)
@@ -1258,7 +1258,7 @@ class ListBox(Control):
         """
         return self.GetValue()
     
-    def ChangeListBoxPadding(self, window_pad: list[int], frame_pad: list[int], item_spacing: list[int]) -> None:
+    def ChangeListBoxPadding(self, window_pad: 'list[int]', frame_pad: 'list[int]', item_spacing: 'list[int]') -> None:
         """
         Change padding for the control
         """
@@ -1296,7 +1296,7 @@ class InputTextBox(Control):
     Input TextBox Control, creates an input textbox control
     """
 
-    def __init__(self, label: str = None, width: int = 0, height: int = 0, pos: list[int] = [],
+    def __init__(self, label: str = None, width: int = 0, height: int = 0, pos: 'list[int]' = [],
                  parent: Control = None, callback: typing.Any = None, drag_callback: typing.Any = None,
                  drop_callback: typing.Any = None, user_data: typing.Any = None, payload_type: str = '$$DPG_PAYLOAD', 
                  default_value: str = '', hint: str = '', multiline: bool = False, no_spaces: bool = False, 
@@ -1360,7 +1360,7 @@ class InputTextBox(Control):
 
         return self
     
-    def ChangeInputTextBoxPadding(self, window_pad: list[int], frame_pad: list[int], item_spacing: list[int], theme_component: int = None) -> None:
+    def ChangeInputTextBoxPadding(self, window_pad: 'list[int]', frame_pad: 'list[int]', item_spacing: 'list[int]', theme_component: int = None) -> None:
         """
         Change padding for the control
         """
@@ -1428,7 +1428,7 @@ class DateSelect(Control):
     """
 
     def __init__(self, label: str = None, default_value: dict = { 'month_day': 14,'year': 20,'month': 5 },
-                 level: int = 0, pos: list[int] = [], parent: Control = None, callback: typing.Any = None, 
+                 level: int = 0, pos: 'list[int]' = [], parent: Control = None, callback: typing.Any = None, 
                  user_data: typing.Any = None) -> None:
         super().__init__(tag=None, label=label)
         self.parent            = parent
@@ -1447,7 +1447,7 @@ class DateSelect(Control):
         # Add self as a child to the parent
         self.parent.children.append(self)
 
-    def ChangeDateSelectPadding(self, window_pad: list[int], frame_pad: list[int], item_spacing: list[int]) -> None:
+    def ChangeDateSelectPadding(self, window_pad: 'list[int]', frame_pad: 'list[int]', item_spacing: 'list[int]') -> None:
         """
         Change padding for the control
         """
@@ -1519,7 +1519,7 @@ class TimeSelect(Control):
     """
 
     def __init__(self, label: str = None, default_value: dict = { 'hour': 14,'min': 32,'sec': 23 },
-                 pos: list[int] = [], hour24: bool = False, parent: Control = None, callback: typing.Any = None, 
+                 pos: 'list[int]' = [], hour24: bool = False, parent: Control = None, callback: typing.Any = None, 
                  user_data: typing.Any = None) -> None:
         super().__init__(tag=None, label=label)
         self.parent            = parent
@@ -1539,7 +1539,7 @@ class TimeSelect(Control):
         # Add self as a child to the parent
         self.parent.children.append(self)
 
-    def ChangeTimeSelectPadding(self, window_pad: list[int], frame_pad: list[int], item_spacing: list[int]) -> None:
+    def ChangeTimeSelectPadding(self, window_pad: 'list[int]', frame_pad: 'list[int]', item_spacing: 'list[int]') -> None:
         """
         Change padding for the control
         """
@@ -1604,8 +1604,8 @@ class ComboBox(Control):
     ComboBox Control, creates a ComboBox control
     """
 
-    def __init__(self, items: list[str] = [], default_value: str = '', width: int = 0, label: str = None, 
-                 pos: list[int] = [], parent: Control = None, callback: typing.Any = None, 
+    def __init__(self, items: 'list[str]' = [], default_value: str = '', width: int = 0, label: str = None, 
+                 pos: 'list[int]' = [], parent: Control = None, callback: typing.Any = None, 
                  drag_callback: typing.Any = None, user_data: typing.Any = None, 
                  payload_type: str = '$$DPG_PAYLOAD') -> None:
         super().__init__(tag=None, label=label)
@@ -1676,7 +1676,7 @@ class ComboBox(Control):
 
         return self
     
-    def ChangeComboBoxPadding(self, window_pad: list[int], frame_pad: list[int], item_spacing: list[int]) -> None:
+    def ChangeComboBoxPadding(self, window_pad: 'list[int]', frame_pad: 'list[int]', item_spacing: 'list[int]') -> None:
         """
         Change padding for the control
         """
@@ -1708,7 +1708,7 @@ class CheckBox(Control):
     CheckBox Control, creates a checkbox control
     """
 
-    def __init__(self, default_value: bool = False, label: str = None, pos: list[int] = [], 
+    def __init__(self, default_value: bool = False, label: str = None, pos: 'list[int]' = [], 
                  parent: Control = None, callback: typing.Any = None, user_data: typing.Any = None) -> None:
         super().__init__(tag=None, label=label)
         self.parent          = parent
@@ -1726,7 +1726,7 @@ class CheckBox(Control):
         # Add self as a child to the parent
         self.parent.children.append(self)
 
-    def ChangeCheckBoxPadding(self, window_pad: list[int], frame_pad: list[int], item_spacing: list[int]) -> None:
+    def ChangeCheckBoxPadding(self, window_pad: 'list[int]', frame_pad: 'list[int]', item_spacing: 'list[int]') -> None:
         """
         Change padding for the control
         """
@@ -1846,7 +1846,7 @@ class Table(Control):
     """
 
     def __init__(self, label: str = None, width: int = 0, height: int = 0, indent: int = -1,
-                 pos: list[int] = [], parent: Control = None, callback: typing.Any = None,
+                 pos: 'list[int]' = [], parent: Control = None, callback: typing.Any = None,
                  header_row: bool = True, clipper: bool = False, inner_width: int = 0, policy: int = 0,
                  freeze_rows: int = 0, freeze_columns: int = 0, sort_multi: bool = False,
                  sort_tristate: bool = False, resizable: bool = False, reorderable: bool = False,
@@ -1950,7 +1950,7 @@ class Table(Control):
 
         return table_row
     
-    def ChangeTablePadding(self, cell_padding: list[int]) -> None:
+    def ChangeTablePadding(self, cell_padding: 'list[int]') -> None:
         """
         Change padding for the control
         """
@@ -1973,9 +1973,9 @@ class LoadingIndicator(Control):
     """
 
     def __init__(self, label: str = None, width: int = 0, height: int = 0, indent: int = -1,
-                 pos: list[int] = [], parent: Control = None, style: int = 0, circle_count: int = 8,
-                 speed: float = 1, radius: float = 3, thickness: float = 1, color: list[int] = [51, 51, 55, 255],
-                 secondary_color: list[int] = [29, 151, 236, 103]) -> None:
+                 pos: 'list[int]' = [], parent: Control = None, style: int = 0, circle_count: int = 8,
+                 speed: float = 1, radius: float = 3, thickness: float = 1, color: 'list[int]' = [51, 51, 55, 255],
+                 secondary_color: 'list[int]' = [29, 151, 236, 103]) -> None:
         super().__init__(tag=None, label=label)
         self.parent = parent
         self.tag    = dpg.add_loading_indicator(
