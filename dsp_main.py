@@ -7,7 +7,6 @@ import threading
 
 def StartButtonEventHandler(sender: typing.Any, app: typing.Any, user: typing.Any) -> None:
 
-    # Set the generate waveform flag
     generate_waveform: threading.Event = user
     generate_waveform.set()
 
@@ -16,10 +15,16 @@ def StopButtonEventHandler(sender: typing.Any, app: typing.Any, user: typing.Any
     generate_waveform: threading.Event = user
     generate_waveform.clear()
 
+def ClearPlotButtonEventHandler(sender: typing.Any, app: typing.Any, user: typing.Any) -> None:
+
+    clear_plots: threading.Event = user
+    clear_plots.set()
+
 def main():
 
     # State variables
     generate_waveform = threading.Event()
+    clear_plots       = threading.Event()
     length_of_plot    = 100
     iteration_count   = 0
     x_data            = []
@@ -110,6 +115,14 @@ def main():
         user_data=generate_waveform,
         pos=[generate_waveform_button.GetPosition()[0] + generate_waveform_button.GetWidth() + 20, generate_waveform_button.GetPosition()[1]]
     )
+    clear_plot_button = cc.Button(
+        label="Clear Plots",
+        width=140, height=30,
+        parent=group2,
+        callback=ClearPlotButtonEventHandler,
+        user_data=clear_plots,
+        pos=[stop_waveform_button.GetPosition()[0] + stop_waveform_button.GetWidth() + 20, stop_waveform_button.GetPosition()[1]]
+    )
     #-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
     # Set a primary window which will always be drawn in the background
@@ -136,6 +149,14 @@ def main():
     # Main loop
     while cc.dpg.is_dearpygui_running():
 
+        # Clear the plots here
+        if clear_plots.is_set():
+            iteration_count = 0
+            x_data.clear()
+            clear_plots.clear()
+            cc.dpg.configure_item(time_line_series, x=[0], y=[0])
+            cc.dpg.fit_axis_data(time_plot.y_axis)
+
         # If the generate waveform is set start populating the plots
         if generate_waveform.is_set():
 
@@ -152,6 +173,9 @@ def main():
                 iteration_count = 0
 
             # Add the algorithm stuff here
+            #*****************************************************************
+            
+            #*****************************************************************
 
             # Plot the data
             cc.dpg.configure_item(time_line_series, x=x_data, y=y_data)
