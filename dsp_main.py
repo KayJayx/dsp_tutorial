@@ -130,9 +130,15 @@ def main():
     height_slider     = cc.Slider(type=float, label="Change Height", width=140, height=100, parent=group3, pos=[20, 130], min_value=-5.0, max_value=5.0, default_value=0.0)
     phase_slider      = cc.Slider(type=float, label="Change Phase", width=140, height=100, parent=group3, pos=[20, 150], min_value=-10.0, max_value=10.0, default_value=0.0)
     frequency_slider  = cc.Slider(type=float, label="Change Frequency", width=140, height=100, parent=group3, pos=[20, 170], min_value=1.0, max_value=500.0, default_value=1.0)
-    period_label      = cc.Label(label=f"Period: {frequency_slider.GetSliderValue()}", parent=group3, pos=[20, 190])
-    frequency_slider.SetSliderCallback(callback=lambda sender, app, user : period_label.SetLabel(f"Period: {'{:.3f}'.format(1 / frequency_slider.GetSliderValue())}"))
-    normalize_freq    = cc.CheckBox(label="Normalize Frequency", parent=group3, pos=[20, 210])
+    angular_label     = cc.Label(label=f"Angular Freq: {'{:.3f}'.format(2 * np.pi * frequency_slider.GetSliderValue())}", parent=group3, pos=[20, 190])
+    period_label      = cc.Label(label=f"Period: {'{:.3f}'.format(frequency_slider.GetSliderValue())}", parent=group3, pos=[20, 210])
+    frequency_slider.SetSliderCallback(
+        callback=lambda sender, app, user : (
+            angular_label.SetLabel(f"Angular Freq: {'{:.3f}'.format(2 * np.pi * frequency_slider.GetSliderValue())}"),
+            period_label.SetLabel(f"Period: {'{:.3f}'.format(1 / frequency_slider.GetSliderValue())}")
+        )
+    )
+    normalize_freq    = cc.CheckBox(label="Normalize Frequency", parent=group3, pos=[20, 230])
     #-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
     # Set a primary window which will always be drawn in the background
