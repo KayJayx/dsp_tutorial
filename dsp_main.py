@@ -25,7 +25,7 @@ def main():
     # State variables
     generate_waveform = threading.Event()
     clear_plots       = threading.Event()
-    length_of_plot    = 100
+    length_of_plot    = 1
 
     # We need the tkinter library in order to get the window
     # screen width and height
@@ -48,7 +48,7 @@ def main():
     main_window.BindTheme()
 
     # Create a window just for the plots
-    plot_window_width  = screen_width - 800
+    plot_window_width  = screen_width - 600
     plot_window_height = screen_height if os.name == "posix" else screen_height - 40
     plot_window = cc.ChildWindow(width=plot_window_width, height=plot_window_height, parent=main_window, pos=[0, 0], no_scrollbar=True)
 
@@ -125,8 +125,14 @@ def main():
 
     # Create sliders to change the waveform
     group3 = cc.Group(parent=control_window, pos=[0, 90])
-    resolution_slider = cc.Slider(type=int, label="Change Samples", width=140, height=100, parent=group3, pos=[20, 90], min_value=101, max_value=505, default_value=101)
-    amplitude_slider = cc.Slider(type=float, label="Change Amplitude", width=140, height=100, parent=group3, pos=[20, 110], min_value=1.0, max_value=5.0, default_value=1.0)
+    resolution_slider = cc.Slider(type=int, label="Change Samples", width=140, height=100, parent=group3, pos=[20, 90], min_value=1, max_value=1010, default_value=101)
+    amplitude_slider  = cc.Slider(type=float, label="Change Amplitude", width=140, height=100, parent=group3, pos=[20, 110], min_value=1.0, max_value=5.0, default_value=1.0)
+    height_slider     = cc.Slider(type=float, label="Change Height", width=140, height=100, parent=group3, pos=[20, 130], min_value=-5.0, max_value=5.0, default_value=0.0)
+    phase_slider      = cc.Slider(type=float, label="Change Phase", width=140, height=100, parent=group3, pos=[20, 150], min_value=-10.0, max_value=10.0, default_value=0.0)
+    frequency_slider  = cc.Slider(type=float, label="Change Frequency", width=140, height=100, parent=group3, pos=[20, 170], min_value=1.0, max_value=500.0, default_value=1.0)
+    period_label      = cc.Label(label=f"Period: {frequency_slider.GetSliderValue()}", parent=group3, pos=[20, 190])
+    frequency_slider.SetSliderCallback(callback=lambda sender, app, user : period_label.SetLabel(f"Period: {'{:.3f}'.format(1 / frequency_slider.GetSliderValue())}"))
+    normalize_freq    = cc.CheckBox(label="Normalize Frequency", parent=group3, pos=[20, 210])
     #-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
     # Set a primary window which will always be drawn in the background
@@ -163,9 +169,16 @@ def main():
 
             # Add the algorithm stuff here
             #*****************************************************************
-            x_data = np.linspace(0, length_of_plot, resolution_slider.GetSliderValue(), endpoint=True)
-            y_data = [amplitude_slider.GetSliderValue() * np.sin(x) for x in x_data]
-
+            samples   = resolution_slider.GetSliderValue()
+            x_data    = np.linspace(0, length_of_plot, samples, endpoint=True)
+            amplitude = amplitude_slider.GetSliderValue()
+            height    = height_slider.GetSliderValue()
+            phase     = phase_slider.GetSliderValue()
+            frequency = frequency_slider.GetSliderValue()
+            if normalize_freq.IsChecked():
+                y_data = [(amplitude * np.sin(((2 * np.pi * frequency * x) / samples) + phase)) + height for x in x_data]
+            else:
+                y_data = [(amplitude * np.sin(((2 * np.pi * frequency * x)) + phase)) + height for x in x_data]
             #*****************************************************************
 
             # Plot the data
