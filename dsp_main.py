@@ -26,8 +26,6 @@ def main():
     generate_waveform = threading.Event()
     clear_plots       = threading.Event()
     length_of_plot    = 100
-    iteration_count   = 0
-    x_data            = []
 
     # We need the tkinter library in order to get the window
     # screen width and height
@@ -68,6 +66,7 @@ def main():
     time_plot.SetPlotLineColor(color=[36, 183, 199], theme_component=time_plot.line_theme_component)
     time_plot.BindTheme()
     time_plot.SetAxisLimits(time_plot.x_axis, 0, length_of_plot)
+    time_plot.SetAxisLimits(time_plot.y_axis, -5, 5)
     time_line_series = cc.dpg.add_line_series(x=[0], y=[0], parent=time_plot.x_axis)
 
     # Create a frequency-domain plot and add it to the window
@@ -123,6 +122,11 @@ def main():
         user_data=clear_plots,
         pos=[stop_waveform_button.GetPosition()[0] + stop_waveform_button.GetWidth() + 20, stop_waveform_button.GetPosition()[1]]
     )
+
+    # Create sliders to change the waveform
+    group3 = cc.Group(parent=control_window, pos=[0, 90])
+    resolution_slider = cc.Slider(type=int, label="Change Samples", width=140, height=100, parent=group3, pos=[20, 90], min_value=101, max_value=505, default_value=101)
+    amplitude_slider = cc.Slider(type=float, label="Change Amplitude", width=140, height=100, parent=group3, pos=[20, 110], min_value=1.0, max_value=5.0, default_value=1.0)
     #-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
     # Set a primary window which will always be drawn in the background
@@ -151,34 +155,21 @@ def main():
 
         # Clear the plots here
         if clear_plots.is_set():
-            iteration_count = 0
-            x_data.clear()
             clear_plots.clear()
             cc.dpg.configure_item(time_line_series, x=[0], y=[0])
-            cc.dpg.fit_axis_data(time_plot.y_axis)
 
         # If the generate waveform is set start populating the plots
         if generate_waveform.is_set():
 
-            # Generate data
-            if len(x_data) != length_of_plot:
-                x_data.append(iteration_count)
-            else:
-                x_data[iteration_count] = iteration_count
-
             # Add the algorithm stuff here
             #*****************************************************************
-            y_data = [np.sin(x) for x in x_data]
+            x_data = np.linspace(0, length_of_plot, resolution_slider.GetSliderValue(), endpoint=True)
+            y_data = [amplitude_slider.GetSliderValue() * np.sin(x) for x in x_data]
 
             #*****************************************************************
-            iteration_count += 1
-
-            if iteration_count == length_of_plot:
-                iteration_count = 0
 
             # Plot the data
             cc.dpg.configure_item(time_line_series, x=x_data, y=y_data)
-            cc.dpg.fit_axis_data(time_plot.y_axis)
 
         # Render the GUI frame
         cc.dpg.render_dearpygui_frame()
