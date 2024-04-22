@@ -125,11 +125,11 @@ def main():
 
     # Create sliders to change the waveform
     group3 = cc.Group(parent=control_window, pos=[0, 90])
-    resolution_slider = cc.Slider(type=int, label="Change Samples", width=140, height=100, parent=group3, pos=[20, 90], min_value=1, max_value=1010, default_value=101)
+    resolution_slider = cc.Slider(type=int, label="Change Samples", width=140, height=100, parent=group3, pos=[20, 90], min_value=1, max_value=2500, default_value=101)
     amplitude_slider  = cc.Slider(type=float, label="Change Amplitude", width=140, height=100, parent=group3, pos=[20, 110], min_value=1.0, max_value=5.0, default_value=1.0)
     height_slider     = cc.Slider(type=float, label="Change Height", width=140, height=100, parent=group3, pos=[20, 130], min_value=-5.0, max_value=5.0, default_value=0.0)
     phase_slider      = cc.Slider(type=float, label="Change Phase", width=140, height=100, parent=group3, pos=[20, 150], min_value=-10.0, max_value=10.0, default_value=0.0)
-    frequency_slider  = cc.Slider(type=float, label="Change Frequency", width=140, height=100, parent=group3, pos=[20, 170], min_value=1.0, max_value=500.0, default_value=1.0)
+    frequency_slider  = cc.Slider(type=float, label="Change Frequency", width=140, height=100, parent=group3, pos=[20, 170], min_value=1.0, max_value=200.0, default_value=1.0)
     angular_label     = cc.Label(label=f"Angular Freq: {'{:.3f}'.format(2 * np.pi * frequency_slider.GetSliderValue())}", parent=group3, pos=[20, 190])
     period_label      = cc.Label(label=f"Period: {'{:.3f}'.format(frequency_slider.GetSliderValue())}", parent=group3, pos=[20, 210])
     frequency_slider.SetSliderCallback(
