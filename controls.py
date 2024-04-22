@@ -2057,3 +2057,11 @@ class Slider(Control):
         Get the slider value.
         """
         return dpg.get_value(self.tag)
+    
+    def SetSliderCallback(self, callback: typing.Any) -> None:
+        """
+        Set a callback for when the slider changes value.
+        """
+        dpg.set_item_callback(self.tag, callback=callback)
+
+        return self
