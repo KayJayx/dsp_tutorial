@@ -31,7 +31,7 @@ def main():
     # screen width and height
     root          = tk.Tk()
     screen_width  = root.winfo_screenwidth()
-    screen_height = root.winfo_screenheight() - 155 if os.name == "posix" else root.winfo_screenheight()
+    screen_height = root.winfo_screenheight() - 155 if os.name == "posix" else root.winfo_screenheight() - 50
 
     # In order to make successful calls to the Dear PyGUI framework we must 
     # establish a context where we can make calls to that code
@@ -131,7 +131,7 @@ def main():
     phase_slider      = cc.Slider(type=float, label="Change Phase", width=140, height=100, parent=group3, pos=[20, 150], min_value=-10.0, max_value=10.0, default_value=0.0)
     frequency_slider  = cc.Slider(type=float, label="Change Frequency", width=140, height=100, parent=group3, pos=[20, 170], min_value=1.0, max_value=200.0, default_value=1.0)
     angular_label     = cc.Label(label=f"Angular Freq: {'{:.3f}'.format(2 * np.pi * frequency_slider.GetSliderValue())}", parent=group3, pos=[20, 190])
-    period_label      = cc.Label(label=f"Period: {'{:.3f}'.format(frequency_slider.GetSliderValue())}", parent=group3, pos=[20, 210])
+    period_label      = cc.Label(label=f"Period: {'{:.3f}'.format(1 / frequency_slider.GetSliderValue())}", parent=group3, pos=[20, 210])
     frequency_slider.SetSliderCallback(
         callback=lambda sender, app, user : (
             angular_label.SetLabel(f"Angular Freq: {'{:.3f}'.format(2 * np.pi * frequency_slider.GetSliderValue())}"),
@@ -175,6 +175,10 @@ def main():
 
             # Add the algorithm stuff here
             #*****************************************************************
+            # DSP Notes
+            # Sample Rate: Rate at which you sample a signal measured in second per samples (like the period)
+            # Sampling Frequency: The inverse of the sampling rate measured in samples per second
+
             samples   = resolution_slider.GetSliderValue()
             x_data    = np.linspace(0, length_of_plot, samples, endpoint=True)
             amplitude = amplitude_slider.GetSliderValue()
@@ -184,6 +188,8 @@ def main():
             if normalize_freq.IsChecked():
                 y_data = [(amplitude * np.sin(((2 * np.pi * frequency * x) / samples) + phase)) + height for x in x_data]
             else:
+                # Digital representation of what would be an analog signal, where samples represents the
+                # total number of inputs into my function
                 y_data = [(amplitude * np.sin(((2 * np.pi * frequency * x)) + phase)) + height for x in x_data]
             #*****************************************************************
 
