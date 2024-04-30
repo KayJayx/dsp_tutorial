@@ -208,14 +208,15 @@ class Menu(Control):
         # Add self as a child to the parent
         self.parent.children.append(self)
 
-    def AddMenuItem(self, label: str = None, callback: typing.Any = None) -> None:
+    def AddMenuItem(self, label: str = None, callback: typing.Any = None, user_data: typing.Any = None) -> None:
         """
         Add menu item to the menu option
         """
         menu_item_tag = dpg.add_menu_item(
             label=label,
             parent=self.tag,
-            callback=callback
+            callback=callback,
+            user_data=user_data
         )
 
         # Create a menu item control on the fly and add it as child to this control
@@ -744,6 +745,14 @@ class Button(Control):
 
         return self
     
+    def SetButtonUserData(self, user_data: typing.Any) -> None:
+        """
+        Set the user data for the button
+        """
+        dpg.set_item_user_data(self.tag, user_data=user_data)
+
+        return self
+    
     def MakeDragSource(self, drag_data: typing.Any = None) -> DragAndDropPayloadExtension:
         """
         Add drag and drop capability to the button
@@ -815,7 +824,7 @@ class Label(Control):
     def __init__(self, label: str = None, pos: 'list[int]' = [], wrap: int = -1, 
                  bullet: bool = False, color: 'list[int]' = (-255, 0, 0, 255), indent: int = -1,
                  parent: Control = None, drag_callback: typing.Any = None,
-                 drop_callback: typing.Any = None) -> None:
+                 drop_callback: typing.Any = None, user_data: typing.Any = None) -> None:
         super().__init__(tag=None, label=label)
         self.parent          = parent
         self.label_theme     = dpg.add_theme()
@@ -830,7 +839,8 @@ class Label(Control):
             indent=indent,
             parent=self.parent.tag,
             drag_callback=drag_callback,
-            drop_callback=drop_callback
+            drop_callback=drop_callback,
+            user_data=user_data
         )
 
         # Add self as a child to the parent
@@ -1151,12 +1161,36 @@ class Plot(Control):
         dpg.set_item_label(self.tag, label)
 
         return self
+    
+    def SetPlotDragCallback(self, callback: typing.Any) -> None:
+        """
+        Sets the plot drag callback
+        """
+        dpg.set_item_drag_callback(self.tag, callback=callback)
+
+        return self
 
     def SetPlotDropCallback(self, callback: typing.Any) -> None:
         """
         Sets the plot drop callback
         """
-        dpg.set_item_drop_callback(self.tag, callback)
+        dpg.set_item_drop_callback(self.tag, callback=callback)
+
+        return self
+    
+    def SetPlotCallback(self, callback: typing.Any) -> None:
+        """
+        Sets the callback for the plot
+        """
+        dpg.set_item_callback(self.tag, callback=callback)
+
+        return self
+    
+    def SetPlotUserData(self, user_data: typing.Any) -> None:
+        """
+        Sets the user data for the plot
+        """
+        dpg.set_item_user_data(self.tag, user_data=user_data)
 
         return self
     
@@ -1289,6 +1323,22 @@ class ListBox(Control):
         )
 
         return drag_and_drop
+    
+    def SetListBoxDragCallback(self, callback: typing.Any) -> None:
+        """
+        Set the drag callback for the list box
+        """
+        dpg.set_item_drag_callback(self.tag, callback=callback)
+
+        return self
+    
+    def SetListBoxUserData(self, user_data: typing.Any) -> None:
+        """
+        Set the user data for the list box
+        """
+        dpg.set_item_user_data(self.tag, user_data=user_data)
+
+        return self
 
 class InputTextBox(Control):
 
@@ -1381,17 +1431,37 @@ class InputTextBox(Control):
 
         return self
     
+    def SetInputTextBoxDragCallback(self, callback: typing.Any) -> None:
+        """
+        Set the drag callback for the input textbox
+        """
+        dpg.set_item_drag_callback(self.tag, callback=callback)
+
+        return self
+    
     def SetInputTextBoxDropCallback(self, callback: typing.Any) -> None:
         """
         Set the drop callback for the input textbox
         """
-        dpg.set_item_drop_callback(self.tag, callback)
+        dpg.set_item_drop_callback(self.tag, callback=callback)
+
+        return self
 
     def SetInputTextBoxCallback(self, callback: typing.Any) -> None:
         """
         Set the callback for the input textbox
         """
-        dpg.set_item_callback(self.tag, callback)
+        dpg.set_item_callback(self.tag, callback=callback)
+
+        return self
+    
+    def SetInputTextBoxUserData(self, user_data: typing.Any) -> None:
+        """
+        Set the user data for the input text box
+        """
+        dpg.set_item_user_data(self.tag, user_data=user_data)
+
+        return self
     
     def GetText(self) -> str:
         """
@@ -1469,7 +1539,15 @@ class DateSelect(Control):
         """
         Sets the callback for the data select control
         """
-        dpg.set_item_callback(self.tag, callback)
+        dpg.set_item_callback(self.tag, callback=callback)
+
+        return self
+    
+    def SetDateSelectUserData(self, user_data: typing.Any) -> None:
+        """
+        Sets the user data for the data select control
+        """
+        dpg.set_item_user_data(self.tag, user_data=user_data)
 
         return self
     
@@ -1598,6 +1676,22 @@ class TimeSelect(Control):
 
         return self
     
+    def SetTimeSelectCallback(self, callback: typing.Any) -> None:
+        """
+        Set the callback for the time select control
+        """
+        dpg.set_item_callback(self.tag, callback=callback)
+
+        return self
+    
+    def SetTimeSelectUserData(self, user_data: typing.Any) -> None:
+        """
+        Set the user data for the time select control
+        """
+        dpg.set_item_user_data(self.tag, user_data=user_data)
+
+        return self
+    
 class ComboBox(Control):
 
     """
@@ -1694,11 +1788,27 @@ class ComboBox(Control):
 
         return self
     
+    def SetComboBoxDragCallback(self, callback: typing.Any) -> None:
+        """
+        Set the drag callback for the combobox control
+        """
+        dpg.set_item_drag_callback(self.tag, callback=callback)
+
+        return self
+    
     def SetComboBoxCallback(self, callback: typing.Any) -> None:
         """
         Set the callback for the combobox control
         """
-        dpg.set_item_callback(self.tag, callback)
+        dpg.set_item_callback(self.tag, callback=callback)
+
+        return self
+    
+    def SetComboBoxUserData(self, user_data: typing.Any) -> None:
+        """
+        Set the user data for the combobox control
+        """
+        dpg.set_item_user_data(self.tag, user_data=user_data)
 
         return self
     
@@ -1748,7 +1858,15 @@ class CheckBox(Control):
         """
         Set the callback for the checkbox control
         """
-        dpg.set_item_callback(self.tag, callback)
+        dpg.set_item_callback(self.tag, callback=callback)
+
+        return self
+    
+    def SetCheckBoxUserData(self, user_data: typing.Any) -> None:
+        """
+        Set the user data for the checkbox control
+        """
+        dpg.set_item_user_data(self.tag, user_data=user_data)
 
         return self
     
@@ -1958,6 +2076,22 @@ class Table(Control):
 
         return self
     
+    def SetTableCallback(self, callback: typing.Any) -> None:
+        """
+        Set the callback for the table control
+        """
+        dpg.set_item_callback(self.tag, callback=callback)
+
+        return self
+    
+    def SetTableUserData(self, user_data: typing.Any) -> None:
+        """
+        Set the user data for the table control
+        """
+        dpg.set_item_user_data(self.tag, user_data=user_data)
+
+        return self
+    
     def BindTheme(self) -> None:
         """
         Binds the theme to the item
@@ -2063,5 +2197,13 @@ class Slider(Control):
         Set a callback for when the slider changes value.
         """
         dpg.set_item_callback(self.tag, callback=callback)
+
+        return self
+    
+    def SetSliderUserData(self, user_data: typing.Any) -> None:
+        """
+        Set a user data for when the slider changes value.
+        """
+        dpg.set_item_user_data(self.tag, user_data=user_data)
 
         return self
