@@ -64,9 +64,6 @@ class Mouse():
     Gets information tied to the mouse
     """
 
-    def __init__(self) -> None:
-        pass
-
     @staticmethod
     def GetMousePosition(local_to_window: bool = False) -> 'list[int]':
         """
@@ -86,9 +83,6 @@ class Keyboard():
     """
     Register Callbacks for Key presses.
     """
-
-    def __init__(self) -> None:
-        pass
 
     @staticmethod
     def RegisterKeyPressEventHandler(key: int = -1, user_data: typing.Any = None, callback: typing.Any = None) -> None:
@@ -111,9 +105,8 @@ class Control():
     Base class for all other control classes
     """
 
-    def __init__(self, tag: int = 0, label: str = None) -> None:
-        self.tag      = tag
-        self.label    = label
+    def __init__(self) -> None:
+        self.tag      = None
         self.children = []
 
     def Destroy(self) -> None:
@@ -195,12 +188,12 @@ class Menu(Control):
     """
 
     def __init__(self, label: str = None, indent: int = -1, parent: Control = None) -> None:
-        super().__init__(tag=None, label=label)
+        super().__init__()
         self.parent          = parent
         self.menu_theme      = dpg.add_theme()
         self.theme_component = dpg.add_theme_component(dpg.mvMenu, parent=self.menu_theme)
         self.tag             = dpg.add_menu(
-            label=self.label,
+            label=label,
             indent=indent,
             parent=self.parent.tag
         )
@@ -276,10 +269,10 @@ class MenuBar(Control):
     """
 
     def __init__(self, label: str = None, parent: Control = None) -> None:
-        super().__init__(tag=None, label=label)
+        super().__init__()
         self.parent = parent
         self.tag    = dpg.add_menu_bar(
-            label=self.label,
+            label=label,
             parent=self.parent.tag
         )
 
@@ -325,10 +318,10 @@ class Tab(Control):
     """
 
     def __init__(self, label: str = None, indent: int = -1, parent: Control = None) -> None:
-        super().__init__(tag=None, label=label)
+        super().__init__()
         self.parent = parent
         self.tag    = dpg.add_tab(
-            label=self.label,
+            label=label,
             indent=indent,
             parent=self.parent.tag
         )
@@ -362,10 +355,10 @@ class TabBar(Control):
     """
 
     def __init__(self, label: str = None, parent: Control = None) -> None:
-        super().__init__(tag=None, label=label)
+        super().__init__()
         self.parent = parent
         self.tag    = dpg.add_tab_bar(
-            label=self.label,
+            label=label,
             parent=self.parent.tag
         )
 
@@ -413,10 +406,10 @@ class DragAndDropPayloadExtension(Control):
     def __init__(self, label: str = None, drag_data: typing.Any = None, 
                  drop_data: typing.Any = None, user_data: typing.Any = None, 
                  payload_type: str = '$$DPG_PAYLOAD', parent: Control = None) -> None:
-        super().__init__(tag=None, label=label)
+        super().__init__()
         self.parent = parent
         self.tag    = dpg.add_drag_payload(
-            label=self.label,
+            label=label,
             drag_data=drag_data,
             drop_data=drop_data,
             user_data=user_data,
@@ -455,12 +448,12 @@ class CollapseHeader(Control):
     def __init__(self, label: str = None, indent: int = -1, pos: 'list[int]' = [], parent: Control = None,
                  closable: bool = False, default_open: bool = False, open_on_double_click: bool = False,
                  open_on_arrow: bool = False, leaf: bool = False, bullet: bool = False) -> None:
-        super().__init__(tag=None, label=label)
+        super().__init__()
         self.parent                = parent
         self.collapse_header_theme = dpg.add_theme()
         self.theme_component       = dpg.add_theme_component(dpg.mvCollapsingHeader, parent=self.collapse_header_theme)
         self.tag                   = dpg.add_collapsing_header(
-            label=self.label,
+            label=label,
             indent=indent,
             pos=pos,
             parent=self.parent.tag,
@@ -516,12 +509,12 @@ class Window(Control):
                  no_close: bool = False, no_background: bool = False, modal: bool = False,
                  popup: bool = False, no_saved_settings: bool = False, 
                  no_open_over_existing_popup: bool = True, on_close: typing.Any = None) -> None:
-        super().__init__(tag=None, label=label)
+        super().__init__()
         self.add_menubar     = add_menubar
         self.window_theme    = dpg.add_theme()
         self.theme_component = dpg.add_theme_component(dpg.mvWindowAppItem, parent=self.window_theme)
         self.tag = dpg.add_window(
-            label=self.label,
+            label=label,
             width=width,
             height=height,
             pos=pos,
@@ -550,7 +543,7 @@ class Window(Control):
         if self.add_menubar:
 
             # Create the menu bar control
-            self.menu_bar = MenuBar(label=f"{self.label}_menu_bar", parent=self)
+            self.menu_bar = MenuBar(label=f"{label}_menu_bar", parent=self)
 
     def AddBorder(self, border_size: float = 0.6) -> None:
         """
@@ -597,14 +590,14 @@ class ChildWindow(Control):
                  drop_callback: typing.Any = None, user_data: typing.Any = None,
                  payload_type: str = '$$DPG_PAYLOAD', border: bool = True, autosize_x: bool = False,
                  autosize_y: bool = False, no_scrollbar: bool = False, horizontal_scrollbar: bool = False) -> None:
-        super().__init__(tag=None, label=label)
+        super().__init__()
         self.add_menubar        = add_menubar
         self.misc_data          = []
         self.parent             = parent
         self.child_window_theme = dpg.add_theme()
         self.theme_component    = dpg.add_theme_component(dpg.mvChildWindow, parent=self.child_window_theme)
         self.tag                = dpg.add_child_window(
-            label=self.label,
+            label=label,
             width=width,
             height=height,
             pos=pos,
@@ -623,7 +616,7 @@ class ChildWindow(Control):
         if self.add_menubar:
 
             # Create the menu bar control
-            self.menu_bar = MenuBar(label=f"{self.label}_menu_bar", parent=self)
+            self.menu_bar = MenuBar(label=f"{label}_menu_bar", parent=self)
         
         # Add self as a child to the parent
         self.parent.children.append(self)
@@ -689,13 +682,13 @@ class Button(Control):
                  drag_callback: typing.Any = None, drop_callback: typing.Any = None,
                  user_data: typing.Any = None, payload_type: str = '$$DPG_PAYLOAD', small: bool = False,
                  arrow: bool = False, direction: int = 0) -> None:
-        super().__init__(tag=None, label=label)
+        super().__init__()
         self.parent          = parent
         self.payload_type    = payload_type
         self.button_theme    = dpg.add_theme()
         self.theme_component = dpg.add_theme_component(dpg.mvButton, parent=self.button_theme)
         self.tag             = dpg.add_button(
-            label=self.label,
+            label=label,
             width=width,
             height=height,
             pos=pos,
@@ -777,12 +770,12 @@ class Group(Control):
                  pos: 'list[int]' = [], horizontal: bool = False, parent: Control = None, 
                  drag_callback: typing.Any = None, drop_callback: typing.Any = None, 
                  user_data: typing.Any = None, payload_type: str = '$$DPG_PAYLOAD') -> None:
-        super().__init__(tag=None, label=label)
+        super().__init__()
         self.parent          = parent
         self.group_theme     = dpg.add_theme()
         self.theme_component = dpg.add_theme_component(dpg.mvGroup, parent=self.group_theme)
         self.tag             = dpg.add_group(
-            label=self.label,
+            label=label,
             width=width,
             height=height,
             pos=pos,
@@ -825,13 +818,13 @@ class Label(Control):
                  bullet: bool = False, color: 'list[int]' = (-255, 0, 0, 255), indent: int = -1,
                  parent: Control = None, drag_callback: typing.Any = None,
                  drop_callback: typing.Any = None, user_data: typing.Any = None) -> None:
-        super().__init__(tag=None, label=label)
+        super().__init__()
         self.parent          = parent
         self.label_theme     = dpg.add_theme()
         self.theme_component = dpg.add_theme_component(dpg.mvText, parent=self.label_theme)
         self.tag             = dpg.add_text(
-            default_value=self.label,
-            label=self.label,
+            default_value=label,
+            label=label,
             pos=pos,
             wrap=wrap,
             bullet=bullet,
@@ -918,7 +911,7 @@ class Plot(Control):
                  query_toggle_mod: int = dpg.internal_dpg.mvKey_Control,
                  horizontal_mod: int = dpg.internal_dpg.mvKey_Alt,
                  vertical_mod: int = dpg.internal_dpg.mvKey_Shift) -> None:
-        super().__init__(tag=None, label=label)
+        super().__init__()
         self.one_plot_at_a_time     = one_plot_at_a_time
         self.override_plot_on_entry = override_plot_on_entry
         self.parent                 = parent
@@ -926,7 +919,7 @@ class Plot(Control):
         self.candle_theme_component = dpg.add_theme_component(dpg.mvCandleSeries, parent=self.plot_theme)
         self.line_theme_component   = dpg.add_theme_component(dpg.mvLineSeries, parent=self.plot_theme)
         self.tag                    = dpg.add_plot(
-            label=self.label,
+            label=label,
             width=width,
             height=height,
             pos=pos,
@@ -1238,7 +1231,7 @@ class ListBox(Control):
                  label: str = None, width: int = 0, pos: 'list[int]' = [], parent: Control = None, 
                  callback: typing.Any = None, drag_callback: typing.Any = None, 
                  user_data: typing.Any = None, payload_type: str = '$$DPG_PAYLOAD') -> None:
-        super().__init__(tag=None, label=label)
+        super().__init__()
         self.parent          = parent
         self.payload_type    = payload_type
         self.listbox_theme   = dpg.add_theme()
@@ -1247,7 +1240,7 @@ class ListBox(Control):
             items=items,
             num_items=num_items,
             default_value=default_value,
-            label=self.label,
+            label=label,
             width=width,
             pos=pos,
             parent=self.parent.tag,
@@ -1353,14 +1346,14 @@ class InputTextBox(Control):
                  uppercase: bool = False, tab_input: bool = False, decimal: bool = False, 
                  hexadecimal: bool = False, readonly: bool = False, password: bool = False, 
                  scientific: bool = False, on_enter: bool = False) -> None:
-        super().__init__(tag=None, label=label)
+        super().__init__()
         self.parent          = parent
         self.payload_type    = payload_type
         self.textbox_theme   = dpg.add_theme()
         self.theme_component = dpg.add_theme_component(dpg.mvInputText, parent=self.textbox_theme)
         self.disabled_theme  = dpg.add_theme_component(dpg.mvInputText, parent=self.textbox_theme, enabled_state=False)
         self.tag             = dpg.add_input_text(
-            label=self.label,
+            label=label,
             width=width,
             height=height,
             pos=pos,
@@ -1500,12 +1493,12 @@ class DateSelect(Control):
     def __init__(self, label: str = None, default_value: dict = { 'month_day': 14,'year': 20,'month': 5 },
                  level: int = 0, pos: 'list[int]' = [], parent: Control = None, callback: typing.Any = None, 
                  user_data: typing.Any = None) -> None:
-        super().__init__(tag=None, label=label)
+        super().__init__()
         self.parent            = parent
         self.date_picker_theme = dpg.add_theme()
         self.theme_component   = dpg.add_theme_component(dpg.mvDatePicker, parent=self.date_picker_theme)
         self.tag               = dpg.add_date_picker(
-            label=self.label,
+            label=label,
             default_value=default_value,
             level=level,
             pos=pos,
@@ -1599,13 +1592,13 @@ class TimeSelect(Control):
     def __init__(self, label: str = None, default_value: dict = { 'hour': 14,'min': 32,'sec': 23 },
                  pos: 'list[int]' = [], hour24: bool = False, parent: Control = None, callback: typing.Any = None, 
                  user_data: typing.Any = None) -> None:
-        super().__init__(tag=None, label=label)
+        super().__init__()
         self.parent            = parent
         self.hour24            = hour24
         self.time_picker_theme = dpg.add_theme()
         self.theme_component   = dpg.add_theme_component(dpg.mvTimePicker, parent=self.time_picker_theme)
         self.tag               = dpg.add_time_picker(
-            label=self.label,
+            label=label,
             default_value=default_value,
             pos=pos,
             hour24=self.hour24,
@@ -1702,14 +1695,14 @@ class ComboBox(Control):
                  pos: 'list[int]' = [], parent: Control = None, callback: typing.Any = None, 
                  drag_callback: typing.Any = None, user_data: typing.Any = None, 
                  payload_type: str = '$$DPG_PAYLOAD') -> None:
-        super().__init__(tag=None, label=label)
+        super().__init__()
         self.parent          = parent
         self.combobox_theme  = dpg.add_theme()
         self.theme_component = dpg.add_theme_component(dpg.mvCombo, parent=self.combobox_theme)
         self.tag             = dpg.add_combo(
             items=items,
             default_value=default_value,
-            label=self.label,
+            label=label,
             width=width,
             pos=pos,
             parent=self.parent.tag,
@@ -1820,13 +1813,13 @@ class CheckBox(Control):
 
     def __init__(self, default_value: bool = False, label: str = None, pos: 'list[int]' = [], 
                  parent: Control = None, callback: typing.Any = None, user_data: typing.Any = None) -> None:
-        super().__init__(tag=None, label=label)
+        super().__init__()
         self.parent          = parent
         self.checkbox_theme  = dpg.add_theme()
         self.theme_component = dpg.add_theme_component(dpg.mvCheckbox, parent=self.checkbox_theme)
         self.tag             = dpg.add_checkbox(
             default_value=default_value,
-            label=self.label,
+            label=label,
             pos=pos,
             parent=self.parent.tag,
             callback=callback,
@@ -1891,10 +1884,10 @@ class TableRow(Control):
     """
 
     def __init__(self, label: str = None, height: int = 0, parent: Control = None) -> None:
-        super().__init__(tag=None, label=label)
+        super().__init__()
         self.parent = parent
         self.tag    = dpg.add_table_row(
-            label=self.label,
+            label=label,
             height=height,
             parent=self.parent.tag
         )
@@ -1928,10 +1921,10 @@ class TableColumn(Control):
                  no_header_width: bool = False, prefer_sort_ascending: bool = True,
                  prefer_sort_descending: bool = False, indent_enable: bool = False, 
                  indent_disable: bool = False) -> None:
-        super().__init__(tag=None, label=label)
+        super().__init__()
         self.parent = parent
         self.tag    = dpg.add_table_column(
-            label=self.label,
+            label=label,
             width=width,
             parent=self.parent.tag,
             enabled=enabled,
@@ -1975,12 +1968,12 @@ class Table(Control):
                  precise_widths: bool = False, no_clip: bool = False, pad_outerX: bool = False,
                  no_pad_outerX: bool = False, no_pad_innerX: bool = False, scrollX: bool = False,
                  scrollY: bool = False, no_saved_settings: bool = False) -> None:
-        super().__init__(tag=None, label=label)
+        super().__init__()
         self.parent          = parent
         self.table_theme     = dpg.add_theme()
         self.theme_component = dpg.add_theme_component(dpg.mvTable, parent=self.table_theme)
         self.tag             = dpg.add_table(
-            label=self.label,
+            label=label,
             width=width,
             height=height,
             indent=indent,
@@ -2110,10 +2103,10 @@ class LoadingIndicator(Control):
                  pos: 'list[int]' = [], parent: Control = None, style: int = 0, circle_count: int = 8,
                  speed: float = 1, radius: float = 3, thickness: float = 1, color: 'list[int]' = [51, 51, 55, 255],
                  secondary_color: 'list[int]' = [29, 151, 236, 103]) -> None:
-        super().__init__(tag=None, label=label)
+        super().__init__()
         self.parent = parent
         self.tag    = dpg.add_loading_indicator(
-            label=self.label,
+            label=label,
             width=width,
             height=height,
             indent=indent,
@@ -2142,11 +2135,11 @@ class Slider(Control):
                  pos: 'list[int]' = [], default_value: typing.Union[float, int] = 0, vertical: bool = False, no_input: bool = False,
                  clamped: bool = False, min_value: typing.Union[float, int] = 0, max_value: typing.Union[float, int] = 100,
                  format: str = None) -> None:
-        super().__init__(tag=None, label=label)
+        super().__init__()
         self.parent = parent
         if type == float:
             self.tag = dpg.add_slider_float(
-                label=self.label,
+                label=label,
                 width=width,
                 height=height,
                 indent=indent,
@@ -2165,7 +2158,7 @@ class Slider(Control):
             )
         elif type == int:
             self.tag = dpg.add_slider_int(
-                label=self.label,
+                label=label,
                 width=width,
                 height=height,
                 indent=indent,
