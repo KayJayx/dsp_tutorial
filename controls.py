@@ -305,7 +305,8 @@ class Menu(Control):
         """
         Add menu item to the menu option
         """
-        menu_item_tag = dpg.add_menu_item(
+        menu_item_control     = Control(parent=self)
+        menu_item_control.tag = dpg.add_menu_item(
             label=label,
             parent=self.tag,
             callback=callback,
@@ -313,7 +314,7 @@ class Menu(Control):
         )
 
         # Create a menu item control on the fly and add it as child to this control
-        self.children.append(Control(tag=menu_item_tag, label=label))
+        self.children.append(menu_item_control)
 
         return self
     
@@ -683,8 +684,8 @@ class Plot(Control):
                  horizontal_mod: int = dpg.internal_dpg.mvKey_Alt,
                  vertical_mod: int = dpg.internal_dpg.mvKey_Shift) -> None:
         super().__init__(parent=parent)
-        self.one_plot_at_a_time     = one_plot_at_a_time
-        self.override_plot_on_entry = override_plot_on_entry
+        self.one_plot_at_a_time     = one_plot_at_a_time        # TODO: No state variables here
+        self.override_plot_on_entry = override_plot_on_entry    # TODO: No state variables here
         self.candle_theme_component = dpg.add_theme_component(dpg.mvCandleSeries, parent=self.theme)
         self.line_theme_component   = dpg.add_theme_component(dpg.mvLineSeries, parent=self.theme)
         self.tag                    = dpg.add_plot(
@@ -739,7 +740,7 @@ class Plot(Control):
             "1mo" : dpg.mvTimeUnit_Mo,
             "3mo" : dpg.mvTimeUnit_Mo
         }
-        self.no_children_onetime_only = True
+        self.no_children_onetime_only = True    # TODO: No state variables here
 
     def AddPlot(self, x_label: str, y_label: str, add_legend: bool = False, x_time: bool = False, y_time: bool = False, 
                 x_lock_min: bool = False, x_lock_max: bool = False, y_lock_min: bool = False, y_lock_max: bool = False,
@@ -772,6 +773,7 @@ class Plot(Control):
 
         return self
     
+    # TODO: Move this outside of the controls file
     def CandleStickPlotDrop(self, sender: typing.Any, app_data: typing.Any, user_data: typing.Any) -> None:
         """
         Adds a candle stick plot to the plotting area, must be passed in as a drop callback
@@ -834,7 +836,8 @@ class Plot(Control):
         else:
             callback = lambda sender, app, user: dpg.delete_item(user)
 
-        candle_stick_control = Control(tag=candle_stick, label="Candle Stick Series")
+        candle_stick_control     = Control(parent=None)
+        candle_stick_control.tag = candle_stick
 
         delete_button: Button = Button(
             label="Delete Plot",
@@ -849,6 +852,7 @@ class Plot(Control):
         if self.one_plot_at_a_time:
             source_control.Disable()
 
+    # TODO: Move this outside of the controls file
     def LineSeriesPlotDrop(self, sender: typing.Any, app_data: typing.Any, user_data: typing.Any) -> None:
         """
         Adds a line series plot to the plotting area, must be passed in as the drop callback
@@ -898,7 +902,8 @@ class Plot(Control):
         else:
             callback = lambda sender, app, user: dpg.delete_item(user)
 
-        line_series_control = Control(tag=line_series, label="Plot Line Series")
+        line_series_control     = Control(parent=None)
+        line_series_control.tag = line_series
 
         delete_button: Button = Button(
             label="Delete Plot",
@@ -913,27 +918,35 @@ class Plot(Control):
         if self.one_plot_at_a_time:
             source_control.Disable()
 
-    def SetPlotTitle(self, label: str) -> Plot:
+    def SwitchThemeComponent(self, theme_component: typing.Any) -> Plot:
+        """
+        Switch the component theme based on the two different themes plots have...
+        """
+        self.theme_component = theme_component
+
+        return self
+
+    def SetPlotTitle(self, title: str) -> Plot:
         """
         Sets the label of the plot i.e. title
         """
-        dpg.set_item_label(self.tag, label)
+        dpg.set_item_label(self.tag, title)
 
         return self
     
-    def SetPlotLineColor(self, color: 'list[int]', theme_component: int) -> Plot:
+    def SetPlotLineColor(self, color: 'list[int]') -> Plot:
         """
         Set the color of the line on plot
         """
-        dpg.add_theme_color(dpg.mvPlotCol_Line, color, category=dpg.mvThemeCat_Plots, parent=theme_component)
+        dpg.add_theme_color(dpg.mvPlotCol_Line, color, category=dpg.mvThemeCat_Plots, parent=self.theme_component)
 
         return self
     
-    def AddBorderToLegend(self, theme_component: int, border_size: float = 0.6) -> Plot:
+    def AddBorderToLegend(self, border_size: float = 0.6) -> Plot:
         """
         Adds a border to the legend
         """
-        dpg.add_theme_style(dpg.mvStyleVar_PopupBorderSize, border_size, category=dpg.mvThemeCat_Core, parent=theme_component)
+        dpg.add_theme_style(dpg.mvStyleVar_PopupBorderSize, border_size, category=dpg.mvThemeCat_Core, parent=self.theme_component)
 
         return self
 
@@ -1052,39 +1065,28 @@ class InputTextBox(Control):
             on_enter=on_enter
         )
 
-    def AddBorder(self, border_size: float = 0.6, theme_component: int = None) -> InputTextBox:
+    def SwitchThemeComponent(self, theme_component: typing.Any) -> InputTextBox:
+        """
+        Switch the component theme based on the enabled and disabled controls
+        """
+        self.theme_component = theme_component
+
+        return self
+
+    def AddBorder(self, border_size: float = 0.6) -> InputTextBox:
         """
         Add a border to the button
         """
-
-        theme_component = self.theme_component if theme_component is None else theme_component
-
-        dpg.add_theme_style(dpg.mvStyleVar_FrameBorderSize, border_size, category=dpg.mvThemeCat_Core, parent=theme_component)
+        dpg.add_theme_style(dpg.mvStyleVar_FrameBorderSize, border_size, category=dpg.mvThemeCat_Core, parent=self.theme_component)
 
         return self
     
-    def ChangeInputTextBoxRounding(self, frame_rounding: int, grab_rounding: int, theme_component: int = None) -> InputTextBox:
+    def ChangeRounding(self, frame_rounding: int, grab_rounding: int) -> InputTextBox:
         """
         Change the rounding of the control
         """
-
-        theme_component = self.theme_component if theme_component is None else theme_component
-
-        dpg.add_theme_style(dpg.mvStyleVar_FrameRounding, frame_rounding, category=dpg.mvThemeCat_Core, parent=theme_component)
-        dpg.add_theme_style(dpg.mvStyleVar_GrabRounding,  grab_rounding,  category=dpg.mvThemeCat_Core, parent=theme_component)
-
-        return self
-    
-    def ChangeInputTextBoxPadding(self, window_pad: 'list[int]', frame_pad: 'list[int]', item_spacing: 'list[int]', theme_component: int = None) -> InputTextBox:
-        """
-        Change padding for the control
-        """
-
-        theme_component = self.theme_component if theme_component is None else theme_component
-
-        dpg.add_theme_style(dpg.mvStyleVar_WindowPadding, window_pad[0],   window_pad[1],   category=dpg.mvThemeCat_Core, parent=theme_component)
-        dpg.add_theme_style(dpg.mvStyleVar_FramePadding,  frame_pad[0],    frame_pad[1],    category=dpg.mvThemeCat_Core, parent=theme_component)
-        dpg.add_theme_style(dpg.mvStyleVar_ItemSpacing,   item_spacing[0], item_spacing[1], category=dpg.mvThemeCat_Core, parent=theme_component)
+        dpg.add_theme_style(dpg.mvStyleVar_FrameRounding, frame_rounding, category=dpg.mvThemeCat_Core, parent=self.theme_component)
+        dpg.add_theme_style(dpg.mvStyleVar_GrabRounding,  grab_rounding,  category=dpg.mvThemeCat_Core, parent=self.theme_component)
 
         return self
     
@@ -1337,11 +1339,19 @@ class CheckBox(Control):
         """
         return self.GetValue()
     
-    def CheckUncheck(self, uncheck: bool = False) -> CheckBox:
+    def Check(self) -> CheckBox:
         """
-        Either checks or unchecks the checkbox
+        Checks the checkbox
         """
-        self.SetValue(not uncheck)
+        self.SetValue(True)
+
+        return self
+    
+    def Uncheck(self) -> CheckBox:
+        """
+        Unchecks the checkbox
+        """
+        self.SetValue(False)
 
         return self
     
@@ -1363,11 +1373,11 @@ class TableRow(Control):
         """
         Add an empty entry into the column for the row
         """
-
-        table_cell_tag = dpg.add_table_cell(label=label, height=height, parent=self.tag)
+        table_cell_control     = Control(parent=self)
+        table_cell_control.tag = dpg.add_table_cell(label=label, height=height, parent=self.tag)
 
         # Create a table cell control on the fly and add it as child to this control
-        self.children.append(Control(tag=table_cell_tag, label=label))
+        self.children.append(table_cell_control)
 
         return self
 
@@ -1513,6 +1523,14 @@ class Table(Control):
         """
         return TableRow(label=label, height=height, parent=self)
     
+    def ChangePadding(self, cell_padding: list[int]) -> Table:
+        """
+        Change padding for the control
+        """
+        dpg.add_theme_style(dpg.mvStyleVar_CellPadding, cell_padding[0], cell_padding[1], category=dpg.mvThemeCat_Core, parent=self.theme_component)
+
+        return self
+    
 class LoadingIndicator(Control):
 
     """
@@ -1590,9 +1608,3 @@ class Slider(Control):
                 max_value=max_value,
                 format=format if format is not None else '%d'
             )
-
-    def GetSliderValue(self) -> float:
-        """
-        Get the slider value.
-        """
-        return self.GetValue()
