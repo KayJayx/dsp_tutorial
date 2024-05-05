@@ -63,7 +63,8 @@ def main():
         pos=[0, 0]
     )
     time_plot.AddPlot(x_label=x_label, y_label=y_label)
-    time_plot.SetPlotLineColor(color=[36, 183, 199], theme_component=time_plot.line_theme_component)
+    time_plot.SwitchThemeComponent(theme_component=time_plot.line_theme_component)
+    time_plot.SetPlotLineColor(color=[36, 183, 199])
     time_plot.BindTheme()
     time_plot.SetAxisLimits(time_plot.x_axis, 0, length_of_plot)
     time_plot.SetAxisLimits(time_plot.y_axis, -5, 5)
@@ -80,7 +81,8 @@ def main():
         pos=[0, time_plot.GetPosition()[1] + time_plot.GetHeight()]
     )
     freq_plot.AddPlot(x_label=x_label, y_label=y_label)
-    freq_plot.SetPlotLineColor(color=[36, 183, 199], theme_component=freq_plot.line_theme_component)
+    freq_plot.SwitchThemeComponent(theme_component=freq_plot.line_theme_component)
+    freq_plot.SetPlotLineColor(color=[36, 183, 199])
     freq_plot.BindTheme()
     freq_line_series = cc.dpg.add_line_series(x=[0], y=[0], parent=freq_plot.x_axis)
 
@@ -130,12 +132,12 @@ def main():
     height_slider     = cc.Slider(type=float, label="Change Height", width=140, height=100, parent=group3, pos=[20, 130], min_value=-5.0, max_value=5.0, default_value=0.0)
     phase_slider      = cc.Slider(type=float, label="Change Phase", width=140, height=100, parent=group3, pos=[20, 150], min_value=-10.0, max_value=10.0, default_value=0.0)
     frequency_slider  = cc.Slider(type=float, label="Change Frequency", width=140, height=100, parent=group3, pos=[20, 170], min_value=1.0, max_value=200.0, default_value=1.0)
-    angular_label     = cc.Label(label=f"Angular Freq: {'{:.3f}'.format(2 * np.pi * frequency_slider.GetSliderValue())}", parent=group3, pos=[20, 190])
-    period_label      = cc.Label(label=f"Period: {'{:.3f}'.format(1 / frequency_slider.GetSliderValue())}", parent=group3, pos=[20, 210])
+    angular_label     = cc.Label(label=f"Angular Freq: {'{:.3f}'.format(2 * np.pi * frequency_slider.GetValue())}", parent=group3, pos=[20, 190])
+    period_label      = cc.Label(label=f"Period: {'{:.3f}'.format(1 / frequency_slider.GetValue())}", parent=group3, pos=[20, 210])
     frequency_slider.SetCallback(
         callback=lambda sender, app, user : (
-            angular_label.SetValue(f"Angular Freq: {'{:.3f}'.format(2 * np.pi * frequency_slider.GetSliderValue())}"),
-            period_label.SetValue(f"Period: {'{:.3f}'.format(1 / frequency_slider.GetSliderValue())}")
+            angular_label.SetValue(f"Angular Freq: {'{:.3f}'.format(2 * np.pi * frequency_slider.GetValue())}"),
+            period_label.SetValue(f"Period: {'{:.3f}'.format(1 / frequency_slider.GetValue())}")
         )
     )
     normalize_freq    = cc.CheckBox(label="Normalize Frequency", parent=group3, pos=[20, 230])
@@ -179,12 +181,12 @@ def main():
             # Sample Rate: Rate at which you sample a signal measured in second per samples (like the period)
             # Sampling Frequency: The inverse of the sampling rate measured in samples per second
 
-            samples   = resolution_slider.GetSliderValue()
+            samples   = resolution_slider.GetValue()
             x_data    = np.linspace(0, length_of_plot, samples, endpoint=True)
-            amplitude = amplitude_slider.GetSliderValue()
-            height    = height_slider.GetSliderValue()
-            phase     = phase_slider.GetSliderValue()
-            frequency = frequency_slider.GetSliderValue()
+            amplitude = amplitude_slider.GetValue()
+            height    = height_slider.GetValue()
+            phase     = phase_slider.GetValue()
+            frequency = frequency_slider.GetValue()
             if normalize_freq.IsChecked():
                 y_data = [(amplitude * np.sin(((2 * np.pi * frequency * x) / samples) + phase)) + height for x in x_data]
             else:
