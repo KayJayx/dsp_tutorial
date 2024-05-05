@@ -44,7 +44,7 @@ def main():
     #-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
     # Create the main window
     main_window = cc.Window()
-    main_window.ChangeWindowPadding(window_pad=[0, 0], frame_pad=[0, 0], item_spacing=[0, 0])
+    main_window.ChangePadding(window_pad=[0, 0], frame_pad=[0, 0], item_spacing=[0, 0])
     main_window.BindTheme()
 
     # Create a window just for the plots
@@ -91,7 +91,7 @@ def main():
 
     # Create a label to show the controls
     group1         = cc.Group(parent=control_window, pos=[0, 0])
-    group1.ChangeGroupPadding(window_pad=[0, 0], frame_pad=[10, 10], item_spacing=[0, 0])
+    group1.ChangePadding(window_pad=[0, 0], frame_pad=[10, 10], item_spacing=[0, 0])
     group1.BindTheme()
     controls_label = cc.Label(label="   Controls", parent=group1)
     separator      = cc.LineSeparator(parent=group1)
@@ -124,7 +124,7 @@ def main():
     )
 
     # Create sliders to change the waveform
-    group3 = cc.Group(parent=control_window, pos=[0, 90])
+    group3            = cc.Group(parent=control_window, pos=[0, 90])
     resolution_slider = cc.Slider(type=int, label="Change Samples", width=140, height=100, parent=group3, pos=[20, 90], min_value=1, max_value=2500, default_value=101)
     amplitude_slider  = cc.Slider(type=float, label="Change Amplitude", width=140, height=100, parent=group3, pos=[20, 110], min_value=1.0, max_value=5.0, default_value=1.0)
     height_slider     = cc.Slider(type=float, label="Change Height", width=140, height=100, parent=group3, pos=[20, 130], min_value=-5.0, max_value=5.0, default_value=0.0)
@@ -132,10 +132,10 @@ def main():
     frequency_slider  = cc.Slider(type=float, label="Change Frequency", width=140, height=100, parent=group3, pos=[20, 170], min_value=1.0, max_value=200.0, default_value=1.0)
     angular_label     = cc.Label(label=f"Angular Freq: {'{:.3f}'.format(2 * np.pi * frequency_slider.GetSliderValue())}", parent=group3, pos=[20, 190])
     period_label      = cc.Label(label=f"Period: {'{:.3f}'.format(1 / frequency_slider.GetSliderValue())}", parent=group3, pos=[20, 210])
-    frequency_slider.SetSliderCallback(
+    frequency_slider.SetCallback(
         callback=lambda sender, app, user : (
-            angular_label.SetLabel(f"Angular Freq: {'{:.3f}'.format(2 * np.pi * frequency_slider.GetSliderValue())}"),
-            period_label.SetLabel(f"Period: {'{:.3f}'.format(1 / frequency_slider.GetSliderValue())}")
+            angular_label.SetValue(f"Angular Freq: {'{:.3f}'.format(2 * np.pi * frequency_slider.GetSliderValue())}"),
+            period_label.SetValue(f"Period: {'{:.3f}'.format(1 / frequency_slider.GetSliderValue())}")
         )
     )
     normalize_freq    = cc.CheckBox(label="Normalize Frequency", parent=group3, pos=[20, 230])
